@@ -16,15 +16,18 @@ public class MapController : MonoBehaviour
         TURRET
     };
 
-    public MapGenerator generator;
     public TextAsset file;
     private CellState[,] grid;
+    private List<NexusController> nexuses;
+    private List<WaveEntrypointController> waveEntrypoints; 
 
 
     // Start is called before the first frame update
     void Start()
     {
         string[] lines = file.text.Split(new[] { "\r\n", "\r", "\n" }, System.StringSplitOptions.None) ;
+        nexuses = new List<NexusController>();
+        waveEntrypoints = new List<WaveEntrypointController>();
         grid = new CellState[lines[0].Length, lines.Length];
         var convert = new Dictionary<char, CellState>()
         {
@@ -40,7 +43,7 @@ public class MapController : MonoBehaviour
             {
                 try
                 {
-                    grid[indexLine.index, indexChar.index] = convert[indexChar.c];
+                    grid[indexChar.index, indexLine.index] = convert[indexChar.c];
                 }
                 catch (KeyNotFoundException e)
                 {
@@ -49,7 +52,43 @@ public class MapController : MonoBehaviour
 
             }
         }
-        generator.Generate(grid);
+        Generate();
+    }
+
+    private void Generate()
+    {
+        Object entryTile = Resources.Load("Prefabs/EntryTile");
+        Object regularTile = Resources.Load("Prefabs/RegularTile");
+        Object nexusTile = Resources.Load("Prefabs/NexusTile");
+
+        var convert = new Dictionary<MapController.CellState, Object>()
+        {
+            { MapController.CellState.ENTRY, entryTile },
+            { MapController.CellState.NEXUS, nexusTile },
+            { MapController.CellState.EMPTY, regularTile },
+            { MapController.CellState.OOB, null },
+            { MapController.CellState.TURRET, null }
+        };
+        for (int i = 0; i < grid.GetLength(0); i++)
+        {
+            for (int j = 0; j < grid.GetLength(1); j++)
+            {
+                Object toInstanciate = convert[grid[i, j]];
+                if (toInstanciate)
+                {
+                    GameObject instantiated = (GameObject)Instantiate(toInstanciate, new Vector3(i, 1, j), Quaternion.identity, transform);
+                    if (toInstanciate == nexusTile)
+                    {
+                        nexuses.Add(instantiated.GetComponent<NexusController>());
+                    }
+                    if (toInstanciate == entryTile)
+                    {
+                        waveEntrypoints.Add(instantiated.GetComponent<WaveEntrypointController>());
+                    }
+                }
+            }
+        }
+        waveEntrypoints.ForEach((entry => entry.Initialize(grid, nexuses[0])));
     }
 
 
