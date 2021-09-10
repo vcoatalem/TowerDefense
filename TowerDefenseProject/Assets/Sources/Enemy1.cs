@@ -6,12 +6,12 @@ public class Enemy1 : EnemyTemplate
 {
 
 
-    public override EnemyActions Behave(MapController map)
+    public override EnemyActions Behave(/*MapController.CellState grid, Vector2 target*/)
     {
         return EnemyActions.ADVANCE;
     }
 
-    public Enemy1() : base(50, 10, 1, "Prefabs/enemy1")
+    public Enemy1() : base(50, 10, 3, "Prefabs/enemy1")
     {
 
     }

@@ -85,7 +85,10 @@ public class Pathfinding
 				while (true)
 				{
 					//Debug.Log($"x: {tile.X} / y: {tile.Y}");
-					res.Add(new Vector2(tile.Y, tile.X));
+					if (tile.Parent != null)
+                    {
+						res.Add(new Vector2(tile.Y, tile.X));
+					}
 					tile = tile.Parent;
 					if (tile == null)
 					{

@@ -30,5 +30,5 @@ public abstract class EnemyTemplate
         model = Resources.Load(filepath);
     }
 
-    public virtual EnemyActions Behave(MapController map) { return EnemyActions.ADVANCE; }
+    public virtual EnemyActions Behave(/*MapController.CellState grid, Vector2 target*/) { return EnemyActions.ADVANCE; }
 }

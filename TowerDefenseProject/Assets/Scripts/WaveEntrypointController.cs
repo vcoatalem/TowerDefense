@@ -14,6 +14,8 @@ public class WaveEntrypointController : MonoBehaviour
     private NexusController targetNexus;
     private List<Vector2> pathToNexus;
 
+    private List<EnemyController> enemies;
+
     private Object pathMarker;
 
     void Awake()
@@ -30,9 +32,10 @@ public class WaveEntrypointController : MonoBehaviour
         waves.Add(new Wave(new Dictionary<EnemyTemplate.EnemyTypes, int> //TODO: different waves later
         { 
             {
-                EnemyTemplate.EnemyTypes.ENEMY1, 5
+                EnemyTemplate.EnemyTypes.ENEMY1, 2
             } 
         }, 1));
+        enemies = new List<EnemyController>();
         StartSpawning();
     }
 
@@ -53,7 +56,8 @@ public class WaveEntrypointController : MonoBehaviour
 
             GameObject instantiated = (GameObject)Instantiate(toSpawn.model, new Vector3(gridPosition.x, 1.5f, gridPosition.y), Quaternion.identity, transform);
             EnemyController enemy = instantiated.GetComponent<EnemyController>();
-            enemy.Initialize(toSpawn);
+            enemy.Initialize(toSpawn, new List<Vector2>(pathToNexus));
+            enemies.Add(enemy);
             yield return new WaitForSeconds(wave.spawnRate);
         }
 
@@ -85,6 +89,9 @@ public class WaveEntrypointController : MonoBehaviour
 
     void Update()
     {
-
+        foreach (EnemyController enemy in enemies)
+        {
+            enemy.Behave();
+        }
     }
 }
