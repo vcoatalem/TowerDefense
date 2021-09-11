@@ -11,7 +11,7 @@ public class Enemy1 : EnemyTemplate
         return EnemyActions.ADVANCE;
     }
 
-    public Enemy1() : base(50, 10, 3, "Prefabs/enemy1")
+    public Enemy1() : base(50, 10, 3, 10, "Prefabs/enemy1")
     {
 
     }

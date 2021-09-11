@@ -16,6 +16,11 @@ public class NexusController : MonoBehaviour
     }
 
 
+    public void TakeHit(int damage)
+    {
+        hitpoints -= damage;
+    }
+
     // Update is called once per frame
     void Update()
     {

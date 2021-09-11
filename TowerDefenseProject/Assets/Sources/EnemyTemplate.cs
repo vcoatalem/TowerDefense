@@ -20,13 +20,16 @@ public abstract class EnemyTemplate
     public float speed { get; }
     public int bounty { get; }
 
+    public int damage { get; }
+
     public Object model { get; }
 
-    public EnemyTemplate(int hitpoints, float speed, int bounty, string filepath)
+    public EnemyTemplate(int hitpoints, float speed, int bounty, int damage, string filepath)
     {
         this.hitpoints = hitpoints;
         this.speed = speed;
         this.bounty = bounty;
+        this.damage = damage;
         model = Resources.Load(filepath);
     }
 

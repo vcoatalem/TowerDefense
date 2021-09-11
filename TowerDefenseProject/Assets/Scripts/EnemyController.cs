@@ -10,8 +10,10 @@ public class EnemyController : MonoBehaviour
     private int hitpoints;
     private float speed;
     private int bounty;
+    private int damage;
+
     private List<Vector2> path;
-    //TODO: loot ta
+    //TODO: loot table
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +33,7 @@ public class EnemyController : MonoBehaviour
         this.hitpoints = template.hitpoints;
         this.speed = template.speed;
         this.bounty = template.bounty;
+        this.damage = template.damage;
         this.path = path;
     }
 
@@ -80,6 +83,13 @@ public class EnemyController : MonoBehaviour
         {
             Debug.Log(GetInstanceID() + " -> " + other.gameObject.name + "(" + other.gameObject.GetInstanceID() + ")");
             path.RemoveAt(0);
+            Debug.Log(path.Count);
+            if (path.Count == 0)
+            {
+                NexusController nexus = other.gameObject.GetComponent<NexusController>();
+                nexus.TakeHit(damage);
+                Destroy(gameObject);
+            }
         }
 
     }
