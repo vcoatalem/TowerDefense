@@ -28,16 +28,24 @@ public class Turret1Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (enemy == null)
+        try
+        {
+            if (enemy == null)
+            {
+                Destroy(gameObject);
+            }
+            if (Vector3.Distance(transform.position, enemy.transform.position) < 0.1)
+            {
+                enemy.TakeDamage(damage);
+                //enemy.Knockback(100f);
+                Destroy(gameObject);
+            }
+            transform.position = Vector3.MoveTowards(transform.position, enemy.transform.position, 0.1f * speed * Time.deltaTime);
+        }
+        catch (Exception e)
         {
             Destroy(gameObject);
         }
-        if (Vector3.Distance(transform.position, enemy.transform.position) < 0.1)
-        {
-            enemy.TakeDamage(damage);
-            enemy.Knockback(5f);
-            Destroy(gameObject);
-        }
-        transform.position = Vector3.MoveTowards(transform.position, enemy.transform.position, 0.1f * speed * Time.deltaTime);
+        
     }
 }

@@ -6,31 +6,27 @@ using UnityEngine;
 
 public class Wave
 {
-    public Dictionary<EnemyTemplate.EnemyTypes, int> enemies { get; }
+    public Dictionary<EnemyController.EnemyTypes, int> enemies { get; }
     public float spawnRate { get; }
 
-    public Wave(Dictionary<EnemyTemplate.EnemyTypes, int> enemies, float spawnRate)
+    public Wave(Dictionary<EnemyController.EnemyTypes, int> enemies, float spawnRate)
     {
         this.enemies = enemies;
         this.spawnRate = spawnRate;
     }
 
-    public EnemyTemplate NextEnemy()
+    public EnemyController.EnemyTypes NextEnemy()
     {
         foreach (var keyValue in enemies)
         {
-            EnemyTemplate.EnemyTypes type = keyValue.Key;
+            EnemyController.EnemyTypes type = keyValue.Key;
             if (enemies[type] > 0)
             {
                 enemies[type] -= 1;
-                switch (type)
-                {
-                    case EnemyTemplate.EnemyTypes.ENEMY1:
-                        return new Enemy1();
-                }
+                return type;
             }
         }
-        return null;
+        return EnemyController.EnemyTypes.ENEMY1;
     }
 
     public bool isOver()

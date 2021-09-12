@@ -3,16 +3,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+public abstract class EnemyController : MonoBehaviour
 {
+    public enum EnemyTypes
+    {
+        ENEMY1
+    }
 
-    private EnemyTemplate template;
-    private int hitpoints;
-    private float speed;
-    private int bounty;
-    private int damage;
+    public enum EnemyActions
+    {
+        ADVANCE,
+        ABILITY
+    };
 
-    private List<Vector2> path;
+
+    protected int hitpoints;
+    protected float speed;
+    protected int bounty;
+    protected int damage;
+    protected List<Vector2> path;
+
+    public void SetPath(List<Vector2> path)
+    {
+        this.path = path;
+    }
+
     //TODO: loot table
 
     // Start is called before the first frame update
@@ -27,9 +42,8 @@ public class EnemyController : MonoBehaviour
 
     }
 
-    public void Initialize(EnemyTemplate template, List<Vector2> path)
+    public void Initialize(EnemyController template, List<Vector2> path)
     {
-        this.template = template;
         this.hitpoints = template.hitpoints;
         this.speed = template.speed;
         this.bounty = template.bounty;
@@ -56,16 +70,7 @@ public class EnemyController : MonoBehaviour
 
 
 
-    public void Behave(/*MapController.CellState grid, Vector2 targetNexus*/)
-    {
-        EnemyTemplate.EnemyActions action = template.Behave(/*grid, targetNexus*/);
-        switch (action)
-        {
-            case EnemyTemplate.EnemyActions.ADVANCE:
-                Advance();
-                break;
-        }
-    }
+    public virtual EnemyActions Behave(/*MapController.CellState grid, Vector2 targetNexus*/) { return EnemyActions.ADVANCE; }
 
     public void TakeDamage(int damage)
     {
@@ -79,13 +84,14 @@ public class EnemyController : MonoBehaviour
     public void Knockback(float force)
     {
         transform.position = Vector3.MoveTowards(transform.position,
-            new Vector3(path[0].x, transform.position.y, path[0].y), 0.1f * force * Time.deltaTime);
+            new Vector3(path[0].x, transform.position.y, path[0].y) * - force, force * Time.deltaTime);
     }
 
     public Vector2 GetGridPosition()
     {
         return new Vector2((float)Math.Round(transform.position.x), (float)Math.Round(transform.position.z));
     }
+
 
     public void OnTriggerEnter(Collider other)
     {

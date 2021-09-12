@@ -19,9 +19,15 @@ public class WaveEntrypointController : MonoBehaviour
 
     private Object pathMarker;
 
+    private Dictionary<EnemyController.EnemyTypes, Object> enemyPrefabs;
+
     void Awake()
     {
         pathMarker = Resources.Load("Prefabs/Cylinder");
+        enemyPrefabs = new Dictionary<EnemyController.EnemyTypes, Object>()
+        {
+            { EnemyController.EnemyTypes.ENEMY1, Resources.Load("Prefabs/Enemy1") }
+        };
     }
 
     public void Initialize(MapController.CellState[,] grid, NexusController target)
@@ -30,10 +36,10 @@ public class WaveEntrypointController : MonoBehaviour
         targetNexus = target;
         FindPathToTargetNexus(grid, target);
         waves = new List<Wave>();
-        waves.Add(new Wave(new Dictionary<EnemyTemplate.EnemyTypes, int> //TODO: different waves later
+        waves.Add(new Wave(new Dictionary<EnemyController.EnemyTypes, int> //TODO: different waves later
         { 
             {
-                EnemyTemplate.EnemyTypes.ENEMY1, 2
+                EnemyController.EnemyTypes.ENEMY1, 2
             } 
         }, 1));
         enemies = new List<EnemyController>();
@@ -53,11 +59,11 @@ public class WaveEntrypointController : MonoBehaviour
 
         while (!wave.isOver())
         {
-            EnemyTemplate toSpawn = waves[0].NextEnemy();
+            EnemyController.EnemyTypes toSpawn = waves[0].NextEnemy();
 
-            GameObject instantiated = (GameObject)Instantiate(toSpawn.model, new Vector3(gridPosition.x, 1.5f, gridPosition.y), Quaternion.identity, transform);
+            GameObject instantiated = (GameObject)Instantiate(enemyPrefabs[toSpawn], new Vector3(gridPosition.x, 1.5f, gridPosition.y), Quaternion.identity, transform);
             EnemyController enemy = instantiated.GetComponent<EnemyController>();
-            enemy.Initialize(toSpawn, new List<Vector2>(pathToNexus));
+            enemy.SetPath(new List<Vector2>(pathToNexus));
             enemies.Add(enemy);
             yield return new WaitForSeconds(wave.spawnRate);
         }
