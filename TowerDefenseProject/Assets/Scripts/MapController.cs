@@ -18,15 +18,25 @@ public class MapController : MonoBehaviour
 
     public TextAsset file;
     private CellState[,] grid;
-    private List<NexusController> nexuses;
-    private List<WaveEntrypointController> waveEntrypoints;
+    private List<NexusController> nexuses = new List<NexusController>();
+    private List<WaveEntrypointController> waveEntrypoints = new List<WaveEntrypointController>();
+
+    private Dictionary<string, Object> prefabs;
+    void Awake()
+    {
+        prefabs = new Dictionary<string, Object>()
+        {
+            { "tile", Resources.Load("Prefabs/RegularTile") },
+            { "nexus",  Resources.Load("Prefabs/NexusTile") },
+            { "entry",  Resources.Load("Prefabs/EntryTile") },
+            { "turret1", Resources.Load("Prefabs/Turret1") }
+        };  
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         string[] lines = file.text.Split(new[] { "\r\n", "\r", "\n" }, System.StringSplitOptions.None) ;
-        nexuses = new List<NexusController>();
-        waveEntrypoints = new List<WaveEntrypointController>();
         grid = new CellState[lines[0].Length, lines.Length];
         var convert = new Dictionary<char, CellState>()
         {
@@ -56,15 +66,11 @@ public class MapController : MonoBehaviour
 
     private void Generate()
     {
-        Object entryTile = Resources.Load("Prefabs/EntryTile");
-        Object regularTile = Resources.Load("Prefabs/RegularTile");
-        Object nexusTile = Resources.Load("Prefabs/NexusTile");
-
         var convert = new Dictionary<MapController.CellState, Object>()
         {
-            { MapController.CellState.ENTRY, entryTile },
-            { MapController.CellState.NEXUS, nexusTile },
-            { MapController.CellState.EMPTY, regularTile },
+            { MapController.CellState.ENTRY, prefabs["entry"] },
+            { MapController.CellState.NEXUS, prefabs["nexus"] },
+            { MapController.CellState.EMPTY, prefabs["tile"] },
             { MapController.CellState.OOB, null },
             { MapController.CellState.TURRET, null }
         };
@@ -76,11 +82,11 @@ public class MapController : MonoBehaviour
                 if (toInstanciate)
                 {
                     GameObject instantiated = (GameObject)Instantiate(toInstanciate, new Vector3(i, 1, j), Quaternion.identity, transform);
-                    if (toInstanciate == nexusTile)
+                    if (grid[i, j] == CellState.NEXUS)
                     {
                         nexuses.Add(instantiated.GetComponent<NexusController>());
                     }
-                    if (toInstanciate == entryTile)
+                    if (grid[i, j] == CellState.ENTRY)
                     {
                         waveEntrypoints.Add(instantiated.GetComponent<WaveEntrypointController>());
                     }
@@ -88,17 +94,15 @@ public class MapController : MonoBehaviour
             }
         }
         //TEST
-        PlaceTurret(new Vector2(3, 3), new Turret1());
+        PlaceTurret(new Vector2(3, 3), prefabs["turret1"]);
         waveEntrypoints.ForEach((entry => entry.Initialize(grid, nexuses[0])));
     }
 
 
-    public void PlaceTurret(Vector2 gridPosition, TurretTemplate template)
+    public void PlaceTurret(Vector2 gridPosition, Object turretPrefab)
     {
         grid[(int)gridPosition.y, (int)gridPosition.x] = CellState.TURRET;
-        GameObject instantiated = (GameObject)Instantiate(template.model, new Vector3(gridPosition.x, 1.5f, gridPosition.y), Quaternion.identity, transform);
-        TurretController turret = instantiated.GetComponent<TurretController>();
-        turret.Initialize(template);
+        GameObject instantiated = (GameObject)Instantiate(turretPrefab, new Vector3(gridPosition.x, 1.5f, gridPosition.y), Quaternion.identity, transform);
     }
 
     // Update is called once per frame

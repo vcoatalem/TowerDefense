@@ -1,33 +1,39 @@
-using System;
-using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class TurretController : MonoBehaviour
+public abstract class TurretController : MonoBehaviour
 {
-
-    private TurretTemplate template;
-
-    // Start is called before the first frame update
-    void Start()
+    public enum TurretAction
     {
-        
+        NOTHING,
+        SHOOT,
+        ABILITY
+    };
+
+    protected int price;
+    protected float range;
+    protected Vector2 size;
+
+
+    public virtual TurretAction Behave(Vector3 position) { return TurretAction.NOTHING; }
+
+    public List<EnemyController> GetEnemiesInRange(Vector3 position)
+    {
+        Collider[] results = new Collider[128];
+        int enemyLayerMask = 1 << 6;
+        int enemyAmount = Physics.OverlapSphereNonAlloc(position, range, results, enemyLayerMask, QueryTriggerInteraction.Collide);
+        //Debug.Log(enemyAmount);
+        return results
+            .Where(col => col != null)
+            .Select(col => col.gameObject.GetComponent<EnemyController>())
+            .ToList();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        template.Behave(transform.position); //TODO: should this be called every frame ? (prob not)
+        Behave(transform.position); //TODO: should this be called every frame ? (prob not)
     }
 
-    public void Initialize(TurretTemplate template)
-    {
-        this.template = template;
-    }
-
-    public Vector2 GetGridPosition()
-    {
-        return new Vector2((float)Math.Round(transform.position.x), (float)Math.Round(transform.position.z));
-    }
 }

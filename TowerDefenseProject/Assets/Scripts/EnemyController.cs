@@ -67,6 +67,21 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    public void TakeDamage(int damage)
+    {
+        hitpoints -= damage;
+        if (hitpoints < 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public void Knockback(float force)
+    {
+        transform.position = Vector3.MoveTowards(transform.position,
+            new Vector3(path[0].x, transform.position.y, path[0].y), 0.1f * force * Time.deltaTime);
+    }
+
     public Vector2 GetGridPosition()
     {
         return new Vector2((float)Math.Round(transform.position.x), (float)Math.Round(transform.position.z));
@@ -83,7 +98,6 @@ public class EnemyController : MonoBehaviour
         {
             Debug.Log(GetInstanceID() + " -> " + other.gameObject.name + "(" + other.gameObject.GetInstanceID() + ")");
             path.RemoveAt(0);
-            Debug.Log(path.Count);
             if (path.Count == 0)
             {
                 NexusController nexus = other.gameObject.GetComponent<NexusController>();
