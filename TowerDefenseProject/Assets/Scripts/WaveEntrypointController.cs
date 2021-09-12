@@ -8,14 +8,15 @@ public class WaveEntrypointController : MonoBehaviour
     private Vector2 gridPosition;
     public Vector2 GetGridPosition => gridPosition;
 
-    private List<Wave> waves; //TODO: later
+    private List<Wave> waves = new List<Wave>();
     public List<Wave> GetWaves => waves;
 
 
     private NexusController targetNexus;
-    private List<Vector2> pathToNexus;
+    private List<Vector2> pathToNexus = new List<Vector2>();
+    public List<Vector2> GetPathToNexus => pathToNexus;
 
-    private List<EnemyController> enemies;
+    private List<EnemyController> enemies = new List<EnemyController>();
 
     private Object pathMarker;
 
@@ -34,8 +35,7 @@ public class WaveEntrypointController : MonoBehaviour
     {
         gridPosition = new Vector2(transform.position.x, transform.position.z); //TODO: for now we will do this assumption
         targetNexus = target;
-        FindPathToTargetNexus(grid, target);
-        waves = new List<Wave>();
+        UpdatePathToTargetNexus(grid);
         waves.Add(new Wave(new Dictionary<EnemyController.EnemyTypes, int> //TODO: different waves later
         { 
             {
@@ -77,9 +77,14 @@ public class WaveEntrypointController : MonoBehaviour
         StartCoroutine("Spawn");
     }
 
-    public void FindPathToTargetNexus(MapController.CellState[,] grid, NexusController target) //pathfinding algorithm
+    public void UpdatePathToTargetNexus(MapController.CellState[,] grid)
     {
-        pathToNexus = Pathfinding.FindPath(grid, gridPosition, target.GetGridPosition);
+        pathToNexus = ComputePathToTargetNexus(grid);
+    }
+
+    public List<Vector2> ComputePathToTargetNexus(MapController.CellState[,] grid) //pathfinding algorithm
+    {
+        List<Vector2> pathToNexus = Pathfinding.FindPath(grid, gridPosition, targetNexus.GetGridPosition);
         if (pathToNexus != null)
         {
             pathToNexus.ForEach((vect) =>
@@ -90,8 +95,9 @@ public class WaveEntrypointController : MonoBehaviour
         }
         else
         {
-            Debug.Log("Could not find path to target Nexus: " + target.GetGridPosition.ToString());
+            Debug.Log("Could not find path to target Nexus: " + targetNexus.GetGridPosition.ToString());
         }
+        return pathToNexus;
     }
 
     void Update()

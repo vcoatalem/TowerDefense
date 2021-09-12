@@ -21,6 +21,8 @@ public class MapController : MonoBehaviour
     private List<NexusController> nexuses = new List<NexusController>();
     private List<WaveEntrypointController> waveEntrypoints = new List<WaveEntrypointController>();
 
+    private List<Vector2> forbiddenTurretPlacementCells = new List<Vector2>();
+
     private Dictionary<string, Object> prefabs;
     void Awake()
     {
@@ -98,11 +100,48 @@ public class MapController : MonoBehaviour
         waveEntrypoints.ForEach((entry => entry.Initialize(grid, nexuses[0])));
     }
 
+    private void ComputeForbiddenTurretPlacementCells()
+    {
+        forbiddenTurretPlacementCells = new List<Vector2>();
+        for (int i = 0; i < grid.GetLength(0); i++)
+        {
+            for (int j = 0; j < grid.GetLength(1); j++)
+            {
+                if (grid[i, j] == CellState.EMPTY)
+                {
+                    grid[i, j] = CellState.TURRET;
+                    foreach (WaveEntrypointController entry in waveEntrypoints)
+                    {
+                        if (entry.ComputePathToTargetNexus(grid) == null)
+                        {
+                            forbiddenTurretPlacementCells.Add(new Vector2(i, j));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
     public void PlaceTurret(Vector2 gridPosition, Object turretPrefab)
     {
+        if (forbiddenTurretPlacementCells.Contains(gridPosition))
+        {
+            Debug.Log("Can't place a turret there as it would block enemy movements");
+            return;
+        }
+
         grid[(int)gridPosition.y, (int)gridPosition.x] = CellState.TURRET;
         GameObject instantiated = (GameObject)Instantiate(turretPrefab, new Vector3(gridPosition.x, 1.5f, gridPosition.y), Quaternion.identity, transform);
+
+        foreach (WaveEntrypointController entry in waveEntrypoints)
+        {
+            if (entry.GetPathToNexus.Contains(gridPosition))
+            {
+                ComputeForbiddenTurretPlacementCells();
+                break;
+            }
+        }
     }
 
     // Update is called once per frame
