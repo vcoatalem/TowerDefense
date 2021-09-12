@@ -59,6 +59,7 @@ public abstract class EnemyController : MonoBehaviour
         }
         else
         {
+            //Debug.Log(path.Count);
             Vector2 target = path[0];
             Vector3 targetPosition = new Vector3(target.x, transform.position.y, target.y);
             //Debug.Log("target position: " + targetPosition.ToString());
@@ -99,10 +100,10 @@ public abstract class EnemyController : MonoBehaviour
         {
             return;
         }
-        if (Math.Round(other.gameObject.transform.position.x) == path[0].x
-            && Math.Round(other.gameObject.transform.position.z) == path[0].y) //TODO: this might be unreliable
+        int monsterPathLayer = 7;
+        if (other.gameObject.layer == monsterPathLayer) //TODO: this might be unreliable
         {
-            //Debug.Log(GetInstanceID() + " -> " + other.gameObject.name + "(" + other.gameObject.GetInstanceID() + ")");
+            //Debug.Log(GetInstanceID() + " -> " + "reached position: " + transform.position.ToString() + "; " + (path.Count - 1) + " remaining");
             path.RemoveAt(0);
             if (path.Count == 0)
             {

@@ -69,7 +69,7 @@ public class WaveEntrypointController : MonoBehaviour
         waves.Add(new Wave(new Dictionary<EnemyController.EnemyTypes, int> //TODO: different waves later
         {
             {
-                EnemyController.EnemyTypes.ENEMY1, 3
+                EnemyController.EnemyTypes.ENEMY1, 1
             }
         }, 1));
         StartSpawning();
