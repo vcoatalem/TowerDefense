@@ -62,8 +62,8 @@ public class Pathfinding
 	public static List<Vector2> FindPath(MapController.CellState[,] grid, Vector2 from, Vector2 to)
     {
 
-		Debug.Log("from: " + from.ToString());
-		Debug.Log("to: " + to.ToString());
+		//Debug.Log("from: " + from.ToString());
+		//Debug.Log("to: " + to.ToString());
 		var start = new Tile { X = (int)from.y, Y = (int)from.x };
 		var end = new Tile { X = (int)to.y, Y = (int)to.x };
 

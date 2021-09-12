@@ -102,7 +102,7 @@ public abstract class EnemyController : MonoBehaviour
         if (Math.Round(other.gameObject.transform.position.x) == path[0].x
             && Math.Round(other.gameObject.transform.position.z) == path[0].y) //TODO: this might be unreliable
         {
-            Debug.Log(GetInstanceID() + " -> " + other.gameObject.name + "(" + other.gameObject.GetInstanceID() + ")");
+            //Debug.Log(GetInstanceID() + " -> " + other.gameObject.name + "(" + other.gameObject.GetInstanceID() + ")");
             path.RemoveAt(0);
             if (path.Count == 0)
             {

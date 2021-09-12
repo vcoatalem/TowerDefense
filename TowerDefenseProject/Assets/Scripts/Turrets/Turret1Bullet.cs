@@ -42,7 +42,7 @@ public class Turret1Bullet : MonoBehaviour
             }
             transform.position = Vector3.MoveTowards(transform.position, enemy.transform.position, 0.1f * speed * Time.deltaTime);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             Destroy(gameObject);
         }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 
+
 public class MapController : MonoBehaviour
 {
 
@@ -20,34 +21,34 @@ public class MapController : MonoBehaviour
     private CellState[,] grid;
     private List<NexusController> nexuses = new List<NexusController>();
     private List<WaveEntrypointController> waveEntrypoints = new List<WaveEntrypointController>();
+    public List<WaveEntrypointController> GetWaveEntrypoints => waveEntrypoints;
 
     private List<Vector2> forbiddenTurretPlacementCells = new List<Vector2>();
-
     private Dictionary<string, Object> prefabs;
     void Awake()
     {
         prefabs = new Dictionary<string, Object>()
-        {
-            { "tile", Resources.Load("Prefabs/RegularTile") },
-            { "nexus",  Resources.Load("Prefabs/NexusTile") },
-            { "entry",  Resources.Load("Prefabs/EntryTile") },
-            { "turret1", Resources.Load("Prefabs/Turret1") }
-        };  
+    {
+        { "tile", Resources.Load("Prefabs/RegularTile") },
+        { "nexus",  Resources.Load("Prefabs/NexusTile") },
+        { "entry",  Resources.Load("Prefabs/EntryTile") },
+        { "turret1", Resources.Load("Prefabs/Turret1") }
+    };
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        string[] lines = file.text.Split(new[] { "\r\n", "\r", "\n" }, System.StringSplitOptions.None) ;
+        string[] lines = file.text.Split(new[] { "\r\n", "\r", "\n" }, System.StringSplitOptions.None);
         grid = new CellState[lines[0].Length, lines.Length];
         var convert = new Dictionary<char, CellState>()
-        {
-            { 'X', CellState.OOB },
-            { 'E', CellState.ENTRY },
-            { '-', CellState.EMPTY },
-            { 'N', CellState.NEXUS },
-            { 'T', CellState.TURRET }
-        };
+    {
+        { 'X', CellState.OOB },
+        { 'E', CellState.ENTRY },
+        { '-', CellState.EMPTY },
+        { 'N', CellState.NEXUS },
+        { 'T', CellState.TURRET }
+    };
         foreach (var indexLine in lines.Select((line, index) => new { index, line }))
         {
             foreach (var indexChar in indexLine.line.ToCharArray().Select((c, index) => new { index, c }))
@@ -69,13 +70,13 @@ public class MapController : MonoBehaviour
     private void Generate()
     {
         var convert = new Dictionary<MapController.CellState, Object>()
-        {
-            { MapController.CellState.ENTRY, prefabs["entry"] },
-            { MapController.CellState.NEXUS, prefabs["nexus"] },
-            { MapController.CellState.EMPTY, prefabs["tile"] },
-            { MapController.CellState.OOB, null },
-            { MapController.CellState.TURRET, null }
-        };
+    {
+        { MapController.CellState.ENTRY, prefabs["entry"] },
+        { MapController.CellState.NEXUS, prefabs["nexus"] },
+        { MapController.CellState.EMPTY, prefabs["tile"] },
+        { MapController.CellState.OOB, null },
+        { MapController.CellState.TURRET, null }
+    };
         for (int i = 0; i < grid.GetLength(0); i++)
         {
             for (int j = 0; j < grid.GetLength(1); j++)
@@ -117,6 +118,7 @@ public class MapController : MonoBehaviour
                             forbiddenTurretPlacementCells.Add(new Vector2(i, j));
                         }
                     }
+                    grid[i, j] = CellState.EMPTY;
                 }
             }
         }
@@ -127,26 +129,23 @@ public class MapController : MonoBehaviour
     {
         if (forbiddenTurretPlacementCells.Contains(gridPosition))
         {
-            Debug.Log("Can't place a turret there as it would block enemy movements");
+            Debug.Log("Can't place a turret there as it would block all enemy movements");
             return;
         }
 
-        grid[(int)gridPosition.y, (int)gridPosition.x] = CellState.TURRET;
+        grid[(int)gridPosition.x, (int)gridPosition.y] = CellState.TURRET;
         GameObject instantiated = (GameObject)Instantiate(turretPrefab, new Vector3(gridPosition.x, 1.5f, gridPosition.y), Quaternion.identity, transform);
 
-        foreach (WaveEntrypointController entry in waveEntrypoints)
+        if (waveEntrypoints.Where(entry => entry.GetPathToNexus.Contains(gridPosition)).Count() != 0)
         {
-            if (entry.GetPathToNexus.Contains(gridPosition))
-            {
-                ComputeForbiddenTurretPlacementCells();
-                break;
-            }
+            ComputeForbiddenTurretPlacementCells();
+            waveEntrypoints.ForEach(entry => entry.UpdatePathToTargetNexus(grid));
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

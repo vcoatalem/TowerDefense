@@ -36,14 +36,6 @@ public class WaveEntrypointController : MonoBehaviour
         gridPosition = new Vector2(transform.position.x, transform.position.z); //TODO: for now we will do this assumption
         targetNexus = target;
         UpdatePathToTargetNexus(grid);
-        waves.Add(new Wave(new Dictionary<EnemyController.EnemyTypes, int> //TODO: different waves later
-        { 
-            {
-                EnemyController.EnemyTypes.ENEMY1, 2
-            } 
-        }, 1));
-        enemies = new List<EnemyController>();
-        StartSpawning();
     }
 
     IEnumerator Spawn()
@@ -70,6 +62,17 @@ public class WaveEntrypointController : MonoBehaviour
 
         waves.Remove(wave);
         Debug.Log("Done spawning wave. " + waves.Count + " remaining");
+    }
+
+    public void EnqueueWave()
+    {
+        waves.Add(new Wave(new Dictionary<EnemyController.EnemyTypes, int> //TODO: different waves later
+        {
+            {
+                EnemyController.EnemyTypes.ENEMY1, 3
+            }
+        }, 1));
+        StartSpawning();
     }
 
     public void StartSpawning() 
@@ -99,7 +102,7 @@ public class WaveEntrypointController : MonoBehaviour
         List<Vector2> pathToNexus = Pathfinding.FindPath(grid, gridPosition, targetNexus.GetGridPosition);
         if (pathToNexus == null)
         {
-            Debug.Log("Could not find path to target Nexus: " + targetNexus.GetGridPosition.ToString());
+            //Debug.Log("Could not find path to target Nexus: " + targetNexus.GetGridPosition.ToString());
         }
         return pathToNexus;
     }
