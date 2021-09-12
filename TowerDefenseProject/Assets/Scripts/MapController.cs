@@ -19,8 +19,7 @@ public class MapController : MonoBehaviour
     public TextAsset file;
     private CellState[,] grid;
     private List<NexusController> nexuses;
-    private List<WaveEntrypointController> waveEntrypoints; 
-
+    private List<WaveEntrypointController> waveEntrypoints;
 
     // Start is called before the first frame update
     void Start()
@@ -88,9 +87,19 @@ public class MapController : MonoBehaviour
                 }
             }
         }
+        //TEST
+        PlaceTurret(new Vector2(3, 3), new Turret1());
         waveEntrypoints.ForEach((entry => entry.Initialize(grid, nexuses[0])));
     }
 
+
+    public void PlaceTurret(Vector2 gridPosition, TurretTemplate template)
+    {
+        grid[(int)gridPosition.y, (int)gridPosition.x] = CellState.TURRET;
+        GameObject instantiated = (GameObject)Instantiate(template.model, new Vector3(gridPosition.x, 1.5f, gridPosition.y), Quaternion.identity, transform);
+        TurretController turret = instantiated.GetComponent<TurretController>();
+        turret.Initialize(template);
+    }
 
     // Update is called once per frame
     void Update()

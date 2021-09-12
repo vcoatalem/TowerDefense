@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -89,9 +90,7 @@ public class WaveEntrypointController : MonoBehaviour
 
     void Update()
     {
-        foreach (EnemyController enemy in enemies)
-        {
-            enemy.Behave();
-        }
+        enemies = enemies.Where((enemy) => enemy != null).ToList();
+        enemies.ForEach(enemy => enemy.Behave());
     }
 }
