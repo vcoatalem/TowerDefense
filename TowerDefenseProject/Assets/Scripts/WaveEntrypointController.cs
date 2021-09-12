@@ -79,12 +79,11 @@ public class WaveEntrypointController : MonoBehaviour
 
     public void UpdatePathToTargetNexus(MapController.CellState[,] grid)
     {
+        foreach (Transform child in transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
         pathToNexus = ComputePathToTargetNexus(grid);
-    }
-
-    public List<Vector2> ComputePathToTargetNexus(MapController.CellState[,] grid) //pathfinding algorithm
-    {
-        List<Vector2> pathToNexus = Pathfinding.FindPath(grid, gridPosition, targetNexus.GetGridPosition);
         if (pathToNexus != null)
         {
             pathToNexus.ForEach((vect) =>
@@ -93,7 +92,12 @@ public class WaveEntrypointController : MonoBehaviour
                 Instantiate(pathMarker, new Vector3(vect.x, 1.2f, vect.y), Quaternion.identity, transform);
             });
         }
-        else
+    }
+
+    public List<Vector2> ComputePathToTargetNexus(MapController.CellState[,] grid) //pathfinding algorithm
+    {
+        List<Vector2> pathToNexus = Pathfinding.FindPath(grid, gridPosition, targetNexus.GetGridPosition);
+        if (pathToNexus == null)
         {
             Debug.Log("Could not find path to target Nexus: " + targetNexus.GetGridPosition.ToString());
         }
