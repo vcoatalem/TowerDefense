@@ -23,6 +23,12 @@ public abstract class EnemyController : MonoBehaviour
     protected int damage;
     protected List<Vector2> path;
 
+    private HitpointsBarController hitpointsBar;
+
+    // static members used for initialization purposes
+    private static UnityEngine.Object hitpointsBarPrefab;
+    private static Canvas canvas;
+
     public void SetPath(List<Vector2> path)
     {
         this.path = path;
@@ -30,18 +36,24 @@ public abstract class EnemyController : MonoBehaviour
 
     //TODO: loot table
 
-    // Start is called before the first frame update
-    void Start()
+
+    //this is called by child Awakes
+    public void Awake()
     {
-        
+        if (!EnemyController.hitpointsBarPrefab)
+        {
+            EnemyController.hitpointsBarPrefab = Resources.Load("Prefabs/HitpointsBar");
+        }
+        if (!canvas)
+        {
+            canvas = FindObjectOfType<Canvas>();
+            Debug.Log("Canvas: " + canvas.ToString());
+        }
+        hitpointsBar = ((GameObject)Instantiate(hitpointsBarPrefab, canvas.transform)).GetComponent<HitpointsBarController>();
+        hitpointsBar.Initialize(transform);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
+    /*
     public void Initialize(EnemyController template, List<Vector2> path)
     {
         this.hitpoints = template.hitpoints;
@@ -49,7 +61,7 @@ public abstract class EnemyController : MonoBehaviour
         this.bounty = template.bounty;
         this.damage = template.damage;
         this.path = path;
-    }
+    }*/
 
     public void Advance()
     {
@@ -79,6 +91,10 @@ public abstract class EnemyController : MonoBehaviour
         if (hitpoints < 0)
         {
             Destroy(gameObject);
+        }
+        else
+        {
+            hitpointsBar.SetHealthBarValue(hitpoints);
         }
     }
 

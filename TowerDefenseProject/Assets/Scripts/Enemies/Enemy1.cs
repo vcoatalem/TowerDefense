@@ -14,6 +14,7 @@ public class Enemy1 : EnemyController
 
     public void Awake()
     {
+        base.Awake();
         base.hitpoints = 50;
         base.bounty = 10;
         this.speed = 10f;
