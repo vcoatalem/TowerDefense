@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class HitpointsBarController : MonoBehaviour
 {
     private Slider slider;
+    private Image background;
     private Image fillArea;
 
     private Transform entity;
@@ -18,6 +19,8 @@ public class HitpointsBarController : MonoBehaviour
     /// <param name="value">should be between 0 to 1</param>
     public void SetHealthBarValue(float value)
     {
+        fillArea.gameObject.SetActive(true);
+        background.gameObject.SetActive(true);
         slider.value = (value / maxHitpoints);
         Debug.Log("slider value: " + slider.value);
         if (slider.value < 0.3f)
@@ -57,6 +60,7 @@ public class HitpointsBarController : MonoBehaviour
         slider.minValue = 0;
         slider.maxValue = 1;
         fillArea = transform.Find("Fill Area").Find("Fill").GetComponent<Image>();
+        background = transform.Find("Background").GetComponent<Image>();
     }
 
     public void Initialize(EnemyController enemy)
@@ -64,6 +68,8 @@ public class HitpointsBarController : MonoBehaviour
         this.entity = enemy.transform;
         this.maxHitpoints = enemy.GetHitpoints;
         SetHealthBarValue(maxHitpoints);
+        fillArea.gameObject.SetActive(false);
+        background.gameObject.SetActive(false);
         initialized = true;
     }
 
