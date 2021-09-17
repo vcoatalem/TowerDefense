@@ -12,12 +12,12 @@ public class Enemy1 : EnemyController
         return EnemyActions.ADVANCE;
     }
 
-    public void Awake()
+    public new void Awake()
     {
-        base.Awake();
         base.hitpoints = 50;
         base.bounty = 10;
         this.speed = 10f;
         this.damage = 20;
+        base.Awake();
     }
 }

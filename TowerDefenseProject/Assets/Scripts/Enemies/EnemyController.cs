@@ -18,6 +18,8 @@ public abstract class EnemyController : MonoBehaviour
 
 
     protected int hitpoints;
+    public int GetHitpoints => hitpoints;
+
     protected float speed;
     protected int bounty;
     protected int damage;
@@ -50,7 +52,7 @@ public abstract class EnemyController : MonoBehaviour
             Debug.Log("Canvas: " + canvas.ToString());
         }
         hitpointsBar = ((GameObject)Instantiate(hitpointsBarPrefab, canvas.transform)).GetComponent<HitpointsBarController>();
-        hitpointsBar.Initialize(transform);
+        hitpointsBar.Initialize(this);
     }
 
     /*

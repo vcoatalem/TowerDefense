@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class HitpointsBarController : MonoBehaviour
 {
-    private Image healthBarImage;
-    private Image healthBarBackground;
+    private Slider slider;
+    private Image fillArea;
 
     private Transform entity;
 
@@ -18,12 +18,13 @@ public class HitpointsBarController : MonoBehaviour
     /// <param name="value">should be between 0 to 1</param>
     public void SetHealthBarValue(float value)
     {
-        healthBarImage.fillAmount = value;
-        if (healthBarImage.fillAmount < (maxHitpoints * 30 / 100))
+        slider.value = (value / maxHitpoints);
+        Debug.Log("slider value: " + slider.value);
+        if (slider.value < 0.3f)
         {
             SetHealthBarColor(Color.red);
         }
-        else if (healthBarImage.fillAmount < (maxHitpoints * 50 / 100))
+        else if (slider.value < 0.5f)
         {
             SetHealthBarColor(Color.yellow);
         }
@@ -35,7 +36,7 @@ public class HitpointsBarController : MonoBehaviour
 
     public float GetHealthBarValue()
     {
-        return healthBarImage.fillAmount;
+        return slider.value;
     }
 
     /// <summary>
@@ -44,7 +45,7 @@ public class HitpointsBarController : MonoBehaviour
     /// <param name="healthColor">Color </param>
     public void SetHealthBarColor(Color healthColor)
     {
-        healthBarImage.color = healthColor;
+        fillArea.color = healthColor;
     }
 
     /// <summary>
@@ -52,12 +53,17 @@ public class HitpointsBarController : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        healthBarImage = GetComponent<Image>();
+        slider = GetComponent<Slider>();
+        slider.minValue = 0;
+        slider.maxValue = 1;
+        fillArea = transform.Find("Fill Area").Find("Fill").GetComponent<Image>();
     }
 
-    public void Initialize(Transform enemy)
+    public void Initialize(EnemyController enemy)
     {
-        this.entity = enemy;
+        this.entity = enemy.transform;
+        this.maxHitpoints = enemy.GetHitpoints;
+        SetHealthBarValue(maxHitpoints);
         initialized = true;
     }
 
@@ -65,7 +71,8 @@ public class HitpointsBarController : MonoBehaviour
     {
         if (entity)
         {
-            transform.position = Camera.main.WorldToScreenPoint(entity.position);
+            Vector3 enemyPosition = Camera.main.WorldToScreenPoint(entity.position);
+            transform.position = new Vector3(enemyPosition.x, enemyPosition.y + 12, enemyPosition.z); //TODO: tweak y parameter
         }
         if (!entity && initialized)
         {
