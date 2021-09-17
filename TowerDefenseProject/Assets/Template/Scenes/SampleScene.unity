@@ -1204,8 +1204,9 @@ GameObject:
   - component: {fileID: 1687258585}
   - component: {fileID: 1687258584}
   - component: {fileID: 1687258582}
-  - component: {fileID: 1687258583}
   - component: {fileID: 1687258586}
+  - component: {fileID: 1687258583}
+  - component: {fileID: 1687258587}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1228,39 +1229,45 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1687258581}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be76e5f14cfee674cb30b491fb72b09b, type: 3}
+  m_Script: {fileID: 11500000, guid: 2c3665ae6dcc76e458340d87ac5f4180, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boost: 3.5
-  positionLerpTime: 0.2
-  mouseSensitivityCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0.5
-      inSlope: 0
-      outSlope: 5
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 2.5
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  rotationLerpTime: 0.01
-  invertY: 0
+  IsCameraActive: 1
+  UseUnscaledTime: 0
+  cursorLockMode: 0
+  IsCursorVisible: 1
+  AxisSetup: 0
+  UseMouseForMovement: 0
+  MouseBoundaries:
+    Left: 64
+    Right: 64
+    Top: 128
+    Bottom: 128
+  ZoomAxis: Mouse ScrollWheel
+  ButtonSetup:
+    MoveUp: 122
+    MoveDown: 115
+    StrafeLeft: 113
+    StrafeRight: 100
+    ZoomIn: 270
+    ZoomOut: 269
+  ZoomStep: 2
+  Speed: 5
+  UseSmoothing: 1
+  SmoothTime: 0.35
+  CanRotate: 1
+  RotationStep: 45
+  RotateClockwise: 97
+  RotateCounterClockwise: 101
+  RotationLerpTime: 0.25
+  ShowDirectionLines: 1
+  ForwardColor: {r: 1, g: 0, b: 0, a: 1}
+  BackwardsColor: {r: 0, g: 1, b: 0, a: 1}
+  LeftColor: {r: 0, g: 0, b: 1, a: 1}
+  RightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  ShowMouseBoundary: 1
 --- !u!20 &1687258584
 Camera:
   m_ObjectHideFlags: 0
@@ -1311,13 +1318,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1687258581}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0.70090926, y: 0, z: 0, w: 0.71325046}
   m_LocalPosition: {x: 3, y: 10, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 89, y: 0, z: 0}
 --- !u!114 &1687258586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1350,6 +1357,50 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!114 &1687258587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1687258581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23e75045fdb29aa46a22fcc4cc0f8c61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsCameraActive: 1
+  UseUnscaledTime: 0
+  cursorLockMode: 0
+  IsCursorVisible: 1
+  UseAxisForMovement: 0
+  HorizontalMovementAxis: Horizontal
+  VerticalMovementAxis: Vertical
+  buttonSetup:
+    MoveForward: 122
+    MoveBackwards: 115
+    StrafeLeft: 113
+    StrafeRight: 100
+    MoveUp: 101
+    MoveDown: 97
+    SpeedUp: 270
+    Slowdown: 269
+    DoubleSpeed: 304
+    HalfSpeed: 306
+    EnableRotation: 324
+  UseCage: 0
+  Cage: {fileID: 0}
+  InvertedRotation: 0
+  HorizontalRotationAxis: Mouse X
+  VerticalRotationAxis: Mouse Y
+  HorizontalSensitivity: 1
+  VerticalSensitivity: 1
+  MovementSpeed: 5
+  UseSmoothing: 1
+  SmoothTime: 0.35
+  UseAxisForSpeed: 1
+  SpeedStepAxis: Mouse ScrollWheel
+  SpeedStep: 10
 --- !u!1 &2130331770
 GameObject:
   m_ObjectHideFlags: 0
