@@ -7,7 +7,9 @@ public abstract class EnemyController : MonoBehaviour
 {
     public enum EnemyTypes
     {
-        ENEMY1
+        ENEMY1,
+        ENEMY2,
+        ENEMY3
     }
 
     public enum EnemyActions
@@ -123,10 +125,14 @@ public abstract class EnemyController : MonoBehaviour
         {
             //Debug.Log(GetInstanceID() + " -> " + "reached position: " + transform.position.ToString() + "; " + (path.Count - 1) + " remaining");
             path.RemoveAt(0);
+            Debug.Log(path.Count);
             if (path.Count == 0)
             {
                 NexusController nexus = other.gameObject.GetComponent<NexusController>();
-                nexus.TakeHit(damage);
+                if (nexus)
+                {
+                    nexus.TakeHit(damage);
+                }
                 Destroy(gameObject);
             }
         }

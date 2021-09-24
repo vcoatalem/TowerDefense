@@ -27,7 +27,9 @@ public class WaveEntrypointController : MonoBehaviour
         pathMarker = Resources.Load("Prefabs/Cylinder");
         enemyPrefabs = new Dictionary<EnemyController.EnemyTypes, Object>()
         {
-            { EnemyController.EnemyTypes.ENEMY1, Resources.Load("Prefabs/Enemy1") }
+            { EnemyController.EnemyTypes.ENEMY1, Resources.Load("Prefabs/Enemy1") },
+            { EnemyController.EnemyTypes.ENEMY2, Resources.Load("Prefabs/Enemy2") },
+            { EnemyController.EnemyTypes.ENEMY3, Resources.Load("Prefabs/Enemy3") }
         };
     }
 
@@ -68,10 +70,11 @@ public class WaveEntrypointController : MonoBehaviour
     {
         waves.Add(new Wave(new Dictionary<EnemyController.EnemyTypes, int> //TODO: different waves later
         {
-            {
-                EnemyController.EnemyTypes.ENEMY1, 1
-            }
-        }, 1));
+            { EnemyController.EnemyTypes.ENEMY1, 3 },
+            { EnemyController.EnemyTypes.ENEMY3, 2 },
+            { EnemyController.EnemyTypes.ENEMY2, 4 },
+
+        }, 0.5f));
         StartSpawning();
     }
 
