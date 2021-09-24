@@ -11,6 +11,9 @@ public class HitpointsBarController : MonoBehaviour
 
     private Transform entity;
 
+    private static Object damageIndicator;
+
+    private int currentHitPoints;
     private int maxHitpoints;
     private bool initialized = false;
     /// <summary>
@@ -22,7 +25,6 @@ public class HitpointsBarController : MonoBehaviour
         fillArea.gameObject.SetActive(true);
         background.gameObject.SetActive(true);
         slider.value = (value / maxHitpoints);
-        Debug.Log("slider value: " + slider.value);
         if (slider.value < 0.3f)
         {
             SetHealthBarColor(Color.red);
@@ -35,6 +37,15 @@ public class HitpointsBarController : MonoBehaviour
         {
             SetHealthBarColor(Color.green);
         }
+    }
+
+    public void TakeDamage(int amount)
+    {
+        currentHitPoints -= amount;
+        SetHealthBarValue(currentHitPoints);
+        GameObject initialized = (GameObject)Instantiate(damageIndicator, transform.position + new Vector3(0, 10, 0), Quaternion.identity, transform);
+        DamageIndicatorController indicator = initialized.GetComponent<DamageIndicatorController>();
+        indicator.Initialize(amount);
     }
 
     public float GetHealthBarValue()
@@ -61,12 +72,17 @@ public class HitpointsBarController : MonoBehaviour
         slider.maxValue = 1;
         fillArea = transform.Find("Fill Area").Find("Fill").GetComponent<Image>();
         background = transform.Find("Background").GetComponent<Image>();
+        if (damageIndicator == null)
+        {
+            damageIndicator = Resources.Load("Prefabs/DamageIndicator");
+        }
     }
 
     public void Initialize(EnemyController enemy)
     {
         this.entity = enemy.transform;
         this.maxHitpoints = enemy.GetHitpoints;
+        this.currentHitPoints = this.maxHitpoints;
         SetHealthBarValue(maxHitpoints);
         fillArea.gameObject.SetActive(false);
         background.gameObject.SetActive(false);

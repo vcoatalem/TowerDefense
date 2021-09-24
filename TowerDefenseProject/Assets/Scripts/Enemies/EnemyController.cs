@@ -96,7 +96,7 @@ public abstract class EnemyController : MonoBehaviour
         }
         else
         {
-            hitpointsBar.SetHealthBarValue(hitpoints);
+            hitpointsBar.TakeDamage(damage);
         }
     }
 
