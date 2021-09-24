@@ -8,8 +8,6 @@ public class AdminInterfaceController : MonoBehaviour
     public MapController map;
     public TurretPlacement turretPlacer;
 
-
-
     void Awake()
     {
 
@@ -21,9 +19,14 @@ public class AdminInterfaceController : MonoBehaviour
         
     }
 
-    public void TogglePlacingTurret()
+    public void TogglePlacingTurret1()
     {
-        turretPlacer.ToggleTurretPlacement();
+        turretPlacer.ToggleTurretPlacement(TurretPlacement.TurretType.TURRET1);
+    }
+
+    public void TogglePlacingTurret2()
+    {
+        turretPlacer.ToggleTurretPlacement(TurretPlacement.TurretType.TURRET2);
     }
 
     public void SendWave()

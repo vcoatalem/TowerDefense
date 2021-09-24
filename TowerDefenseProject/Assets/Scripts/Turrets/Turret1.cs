@@ -9,7 +9,7 @@ public class Turret1 : TurretController
     private float cooldown = 0.2f;
     private bool isOnCooldown = false;
 
-    private Object bullet;
+    private static Object bullet;
 
     IEnumerator Cooldown()
     {
@@ -27,24 +27,17 @@ public class Turret1 : TurretController
         base.size = new Vector2(1, 1);
         bullet = Resources.Load("Prefabs/Turret1Bullet");
     }
-    public EnemyController GetClosestEnemy(Vector3 position,  List<EnemyController> enemies)
+    public EnemyController GetClosestEnemy(Vector3 position, List<EnemyController> enemies)
     {
-        if (enemies.Count == 0)
+        var closestEnemy = GetEnemiesInRange(position)
+            .Select((enemy) => new { enemy, distance = Vector3.Distance(enemy.transform.position, position) })
+            .OrderBy(enemyRange => -enemyRange.distance)
+            .FirstOrDefault();
+        if (closestEnemy != null)
         {
-            return null;
+            return closestEnemy.enemy;
         }
-        float minDistance = int.MaxValue;
-        int index = 0;
-        for (int i = 0; i < enemies.Count; i++)
-        {
-            float distance = Vector3.Distance(enemies[i].transform.position, position);
-            if (distance < minDistance)
-            {
-                index = i;
-                minDistance = distance;
-            }
-        }
-        return enemies[index];
+        return null;
     }
 
     public override TurretAction Behave(Vector3 position)

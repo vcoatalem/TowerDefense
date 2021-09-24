@@ -4,26 +4,48 @@ using UnityEngine;
 
 public class TurretPlacement : MonoBehaviour
 {
-    private bool isPlacingTurret = false;
-    public bool IsPlacingTurret => isPlacingTurret;
 
-    private Object turret1;
+    public enum TurretType
+    {
+        NONE,
+        TURRET1,
+        TURRET2
+    };
+
+    private TurretType selectedTurret = TurretType.NONE;
+    public TurretType WhichTurretSelected => selectedTurret;
+
+    private static Dictionary<TurretType, Object> turrets;
 
     public MapController map;
 
     void Awake()
     {
-        turret1 = Resources.Load("Prefabs/Turret1");
+        if (turrets == null)
+        {
+            turrets = new Dictionary<TurretType, Object>()
+            {
+                { TurretType.TURRET1, Resources.Load("Prefabs/Turret1") },
+                { TurretType.TURRET2, Resources.Load("Prefabs/Turret2") }
+            };
+        }
     }
 
-    public void ToggleTurretPlacement()
+    public void ToggleTurretPlacement(TurretType turretType)
     {
-        isPlacingTurret = !isPlacingTurret;
+        if (selectedTurret != TurretType.NONE)
+        {
+            selectedTurret = TurretType.NONE;
+        }
+        else
+        {
+            selectedTurret = turretType;
+        }
     }
 
-    public void PlaceTurret(Vector2 position)
+    public void PlaceTurret(Vector2 position) //TODO: enum instead ?
     {
-        map.PlaceTurret(position, turret1);
+        map.PlaceTurret(position, turrets[selectedTurret]);
     }
     // Start is called before the first frame update
 

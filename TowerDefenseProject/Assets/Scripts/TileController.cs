@@ -14,7 +14,7 @@ public class TileController : MonoBehaviour
     public void OnMouseOver()
     {
         this.transform.localScale = new Vector3(1, 0.3f, 1);
-        if (Input.GetMouseButtonDown(0) && turretPlacement.IsPlacingTurret)
+        if (Input.GetMouseButtonDown(0) && turretPlacement.WhichTurretSelected != TurretPlacement.TurretType.NONE)
         {
             turretPlacement.PlaceTurret(new Vector2(this.transform.position.x, this.transform.position.z));
         }
