@@ -57,7 +57,7 @@ public class WaveEntrypointController : MonoBehaviour
 
             GameObject instantiated = (GameObject)Instantiate(enemyPrefabs[toSpawn], new Vector3(gridPosition.x, 1.5f, gridPosition.y), Quaternion.identity, transform);
             EnemyController enemy = instantiated.GetComponent<EnemyController>();
-            enemy.SetPath(new List<Vector2>(pathToNexus));
+            enemy.Initialize(new List<Vector2>(pathToNexus), targetNexus);
             enemies.Add(enemy);
             yield return new WaitForSeconds(wave.spawnRate);
         }
@@ -103,10 +103,6 @@ public class WaveEntrypointController : MonoBehaviour
     public List<Vector2> ComputePathToTargetNexus(MapController.CellState[,] grid) //pathfinding algorithm
     {
         List<Vector2> pathToNexus = Pathfinding.FindPath(grid, gridPosition, targetNexus.GetGridPosition);
-        if (pathToNexus == null)
-        {
-            //Debug.Log("Could not find path to target Nexus: " + targetNexus.GetGridPosition.ToString());
-        }
         return pathToNexus;
     }
 

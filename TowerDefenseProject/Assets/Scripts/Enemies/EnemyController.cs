@@ -26,6 +26,7 @@ public abstract class EnemyController : MonoBehaviour
     protected int bounty;
     protected int damage;
     protected List<Vector2> path;
+    protected NexusController target;
 
     private HitpointsBarController hitpointsBar;
 
@@ -33,9 +34,10 @@ public abstract class EnemyController : MonoBehaviour
     private static UnityEngine.Object hitpointsBarPrefab;
     private static Canvas canvas;
 
-    public void SetPath(List<Vector2> path)
+    public void Initialize(List<Vector2> path, NexusController target)
     {
         this.path = path;
+        this.target = target;
     }
 
     //TODO: loot table
@@ -127,11 +129,7 @@ public abstract class EnemyController : MonoBehaviour
             path.RemoveAt(0);
             if (path.Count == 0)
             {
-                NexusController nexus = other.gameObject.GetComponent<NexusController>();
-                if (nexus)
-                {
-                    nexus.TakeHit(damage);
-                }
+                target.TakeHit(damage);
                 Destroy(gameObject);
             }
         }
