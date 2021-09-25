@@ -31,8 +31,7 @@ public class MapController : MonoBehaviour
     {
         { "tile", Resources.Load("Prefabs/RegularTile") },
         { "nexus",  Resources.Load("Prefabs/NexusTile") },
-        { "entry",  Resources.Load("Prefabs/EntryTile") },
-        { "turret1", Resources.Load("Prefabs/Turret1") }
+        { "entry",  Resources.Load("Prefabs/EntryTile") }
     };
     }
 
@@ -96,8 +95,6 @@ public class MapController : MonoBehaviour
                 }
             }
         }
-        //TEST
-        PlaceTurret(new Vector2(3, 3), prefabs["turret1"]);
         waveEntrypoints.ForEach((entry => entry.Initialize(grid, nexuses[0])));
     }
 

@@ -125,7 +125,6 @@ public abstract class EnemyController : MonoBehaviour
         {
             //Debug.Log(GetInstanceID() + " -> " + "reached position: " + transform.position.ToString() + "; " + (path.Count - 1) + " remaining");
             path.RemoveAt(0);
-            Debug.Log(path.Count);
             if (path.Count == 0)
             {
                 NexusController nexus = other.gameObject.GetComponent<NexusController>();
