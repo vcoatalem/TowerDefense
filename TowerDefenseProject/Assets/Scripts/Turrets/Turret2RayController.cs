@@ -47,10 +47,13 @@ public class Turret2RayController : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        line.SetPositions(new Vector3[]
+        else
         {
+            line.SetPositions(new Vector3[]
+            {
             source.transform.position,
             target.transform.position
-        });
+            });
+        }
     }
 }
